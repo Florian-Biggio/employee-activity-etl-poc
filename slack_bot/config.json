@@ -1,0 +1,16 @@
+{
+  "slack": {
+    "channel_id": "C09BBT4JV88",
+    "fallback_channel_name": "#bot-messages"
+  },
+  "kafka_topic": "pg_cdc.public.employee_activities",
+  "sport_emojis": {
+    "V": "🚴",
+    "R": "🏃",
+    "S": "🏊",
+    "M": "🚶",
+    "E": "🏋️",
+    "T": "🎾",
+    "N": "🧘"
+  }
+}
