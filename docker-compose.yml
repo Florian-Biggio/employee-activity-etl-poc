@@ -1,0 +1,50 @@
+services:
+  # Redpanda (Kafka-compatible)
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.2.7
+    container_name: redpanda
+    ports:
+      - "9092:9092"
+      - "9644:9644" # For metrics
+    command:
+      - redpanda start
+      - --smp 1
+      - --memory 1G
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --node-id 0
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+
+  # Kafka Connect with Debezium
+  connect:
+    image: debezium/connect:2.3
+    container_name: connect
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: redpanda:29092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: connect_configs
+      OFFSET_STORAGE_TOPIC: connect_offsets
+      STATUS_STORAGE_TOPIC: connect_statuses
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_PLUGIN_PATH: /kafka/connect
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # For Mac/Windows
+      # For Linux, you might need to add your host IP manually
+    depends_on:
+      - redpanda
+
+  # UI for monitoring (optional)
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: redpanda:29092
+    depends_on:
+      - redpanda

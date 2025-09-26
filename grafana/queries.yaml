@@ -1,0 +1,6 @@
+employee_activity_count:
+  query: "SELECT COUNT(*) as count FROM employee_activities"
+  metrics:
+    - count:
+        usage: "GAUGE"
+        description: "Number of rows in employee_activities table"

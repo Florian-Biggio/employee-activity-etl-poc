@@ -1,0 +1,9 @@
+curl.exe -X POST -H "Content-Type: application/json" -d "@postgres_credentials.json" http://localhost:8083/connectors
+
+
+
+
+
+curl.exe -X DELETE http://localhost:8083/connectors/postgres-connector
+
+^ to DELETE
