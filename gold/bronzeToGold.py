@@ -47,7 +47,7 @@ def process_gold_layer():
     # Path configuration
     bronze_delta_path = "../bronze/output/delta/employee_activities"
     gold_csv_output_path = "../gold/employee_activities_enriched.csv"
-    gold_delta_output_path = "output/delta/employee_activities_enriched"  # New Delta output
+    gold_delta_output_path = "output/delta/employee_activities_enriched" 
     xlsx1_reference_path = '../data/DonneesSportive.xlsx'
     xlsx2_reference_path = '../data/DonneesRH.xlsx'
     
@@ -57,13 +57,13 @@ def process_gold_layer():
         logging.info(f"Reference XLSX1: {xlsx1_reference_path}")
         logging.info(f"Reference XLSX2: {xlsx2_reference_path}")
         logging.info(f"Output CSV: {gold_csv_output_path}")
-        logging.info(f"Output Delta: {gold_delta_output_path}")  # New log
+        logging.info(f"Output Delta: {gold_delta_output_path}")
         
         # Check if Delta table exists first
         if not check_delta_table_exists(bronze_delta_path):
             logging.error("Delta table not found or empty. Please run the bronze consumer first!")
             logging.info("To create the Delta table, run:")
-            logging.info("cd bronze && python your_consumer_script.py")
+            logging.info("py bronze/redPandaToDeltaLake.py")
             return False
         
         # Step 1: Read Delta Lake table

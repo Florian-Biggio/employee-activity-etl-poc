@@ -258,9 +258,6 @@ if __name__ == '__main__':
     args = parse_arguments()
     
     should_reset = args.reset
-    if args.no_reset:
-        should_reset = False
-    
 
     delta_path = args.output_delta if args.output_delta else "output/delta/employee_activities"
     if args.no_delta:

@@ -1,0 +1,47 @@
+Employees Qualification Table = 
+VAR EmployeeSummary =
+    SUMMARIZE(
+        'employee_activities_enriched',
+        'employee_activities_enriched'[ID_salarie],
+        'employee_activities_enriched'[Moyen de déplacement],
+        "TotalLineCount", COUNTROWS('employee_activities_enriched')
+    )
+VAR EmployeesWithSalary =
+    ADDCOLUMNS(
+        EmployeeSummary,
+        "Salary", 
+            VAR CurrentEmployee = [ID_salarie]
+            RETURN
+                CALCULATE(
+                    SUM('employee_commute_analytics'[Salaire brut]),
+                    'employee_commute_analytics'[ID salarié] = CurrentEmployee
+                )
+    )
+RETURN
+    ADDCOLUMNS(
+        EmployeesWithSalary,
+        "QualifySport", [TotalLineCount] > 5,
+        "QualifyCommute", 
+            [Moyen de déplacement] = "Marche/running" ||
+            [Moyen de déplacement] = "Vélo/Trottinette/Autres"
+    )
+
+
+Total Journées bien-être =
+SUMX(
+    'Employees Qualification Table',
+    'Employees Qualification Table'[QualifySport]*5
+)
+
+Total Equivalent Salaire Journées bien-être =
+SUMX(
+    'Employees Qualification Table',
+    'Employees Qualification Table'[Salary] * 'Employees Qualification Table'[QualifySport]*(5/251)
+)
+
+
+Total Prime sportive =
+SUMX(
+    'Employees Qualification Table',
+    'Employees Qualification Table'[Salary] * 'Employees Qualification Table'[QualifyCommute]*0.05
+)
